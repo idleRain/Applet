@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import App from './App'
+import store from './store'
 
 // 封装的网络请求
 import './utils/http'
@@ -10,6 +11,7 @@ App.mpType = 'app'
 
 
 const app = new Vue({
-	...App
+	...App,
+	store
 })
 app.$mount()

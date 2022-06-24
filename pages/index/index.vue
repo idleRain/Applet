@@ -2,9 +2,17 @@
 	<view :style="{ height: pageHeight, overflow: 'hidden' }">
 		<search @search="disableScroll" />
 		<!-- 焦点图 -->
-		<swiper class="banner" indicator-dots indicator-color="rgba(255, 255, 255, 0.6)" indicator-active-color="#fff">
+		<swiper
+			class="banner"
+			indicator-dots
+			indicator-color="rgba(255, 255, 255, 0.6)"
+			indicator-active-color="#fff"
+		>
 			<swiper-item v-for="item in swiperList" :key="item.goods_id">
-				<navigator :url="`/subpkg/goods/index/index?id=${item.goods_id}`" :open-type="item.open_type">
+				<navigator
+					:url="`/subpkg/goods/index/index?id=${item.goods_id}`"
+					:open-type="item.open_type"
+				>
 					<image :src="item.image_src"></image>
 				</navigator>
 			</swiper-item>
@@ -13,7 +21,11 @@
 		<view class="navs">
 			<navigator
 				:open-type="item.open_type || 'navigate'"
-				:url="item.open_type ? `/pages/category/index` : `/subpkg/pages/list/index?query=${item.name}`"
+				:url="
+					item.open_type
+						? `/pages/category/index`
+						: `/subpkg/pages/list/index?query=${item.name}`
+				"
 				v-for="item in categoryList"
 				:key="item.image_src"
 			>
@@ -22,8 +34,14 @@
 		</view>
 		<!-- 楼层 -->
 		<view class="floors">
-			<view class="floor" v-for="item in floorList" :key="item.floor_title.name">
-				<view class="title"><image :src="item.floor_title.image_src"></image></view>
+			<view
+				class="floor"
+				v-for="item in floorList"
+				:key="item.floor_title.name"
+			>
+				<view class="title">
+					<image :src="item.floor_title.image_src"></image>
+				</view>
 				<view class="items">
 					<navigator
 						:url="'/subpkg/pages/list/index?query=' + children.name"
@@ -81,21 +99,26 @@ export default {
 		},
 		// 获取列表数据
 		async getSwiperList() {
-			const { data: res } = await uni.$http.get('/api/public/v1/home/swiperdata')
-			if (res.meta.status !== 200) return uni.showToast({ title: '加载失败！', icon: 'none' })
+			const { data: res } = await uni.$http.get(
+				'/api/public/v1/home/swiperdata'
+			)
+			if (res.meta.status !== 200)
+				return uni.showToast({ title: '加载失败！', icon: 'none' })
 			this.swiperList = res.message
 		},
 		// 获取分类导航数据
 		async getCategoryList() {
 			// 同步方式获取数据
 			const { data: res } = await uni.$http.get('/api/public/v1/home/catitems')
-			if (res.meta.status !== 200) return uni.showToast({ title: '加载失败！', icon: 'none' })
+			if (res.meta.status !== 200)
+				return uni.showToast({ title: '加载失败！', icon: 'none' })
 			this.categoryList = res.message
 		},
 		// 获取楼层数据
 		async getFloorList() {
 			const { data: res } = await uni.$http.get('/api/public/v1/home/floordata')
-			if (res.meta.status !== 200) return uni.showToast({ title: '加载失败！', icon: 'none' })
+			if (res.meta.status !== 200)
+				return uni.showToast({ title: '加载失败！', icon: 'none' })
 			this.floorList = res.message
 		},
 		// 返回顶部
