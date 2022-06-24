@@ -21,12 +21,23 @@
 			<view class="sub">
 				<scroll-view scroll-y>
 					<!-- 封面图 -->
-					<image src="http://static.botue.com/ugo/uploads/category.png" class="thumb"></image>
-					<view class="children" v-for="item in subCategoryList" :key="item.cat_id">
+					<image
+						src="http://static.botue.com/ugo/uploads/category.png"
+						class="thumb"
+					></image>
+					<view
+						class="children"
+						v-for="item in subCategoryList"
+						:key="item.cat_id"
+					>
 						<view class="title">{{ item.cat_name }}</view>
 						<!-- 品牌 -->
 						<view class="brands">
-							<navigator url="/subpkg/pages/list/index" v-for="children in item.children" :key="children.cat_id">
+							<navigator
+								:url="'/subpkg/pages/list/index?query=' + item.cat_name"
+								v-for="children in item.children"
+								:key="children.cat_id"
+							>
 								<image :src="children.cat_icon"></image>
 								<text>{{ children.cat_name }}</text>
 							</navigator>
@@ -58,7 +69,8 @@ export default {
 	},
 	computed: {
 		subCategoryList() {
-			if (this.categoryList[this.activeIndex]) return this.categoryList[this.activeIndex].children
+			if (this.categoryList[this.activeIndex])
+				return this.categoryList[this.activeIndex].children
 			return []
 		}
 	},

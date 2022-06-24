@@ -6,7 +6,7 @@ export default {
 	mutations: {
 		// 添加商品到购物车
 		addToCart(state, goods) {
-			// console.log('@vuex 接收到了 goods ：', goods);
+			// console.log('@vuex 接收到了 goods ：', goods)
 			const result = state.carts.find(item => item.goods_id === goods.goods_id)
 			if (!result) {
 				state.carts.push(goods)
@@ -29,6 +29,20 @@ export default {
 			// 更新本地存储
 			this.commit('cart/saveStorage');
 		},
+		// 减商品
+		decreaseCount(state, index) {
+			if (state.carts[index].goods_count <= 1) return
+			state.carts[index].goods_count -= 1
+			// 更新本地存储
+			this.commit('cart/saveStorage');
+		},
+		// 加商品
+		increaseCount(state, index) {
+			if (state.carts[index].goods_count >= 99) return
+			state.carts[index].goods_count += 1
+			// 更新本地存储
+			this.commit('cart/saveStorage');
+		},
 	},
 	getters: {
 		cartCount(state) {
@@ -39,6 +53,20 @@ export default {
 		},
 		allChecked(state) {
 			return state.carts.every(item => item.goods_state === true)
+		},
+		// 选中购物车总数
+		checkedCount(state) {
+			return state.carts.reduce((prev, item) => {
+				if (!item.goods_state) return prev
+				return prev += item.goods_count
+			}, 0)
+		},
+		// 选中商品的总金额
+		amount(state) {
+			return state.carts.reduce((prev, item) => {
+				if (!item.goods_state) return prev
+				return prev += item.goods_count * item.goods_price
+			}, 0)
 		}
 	},
 }

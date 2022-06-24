@@ -11,43 +11,61 @@
 			<view class="dd">广东省广州市天河区一珠吉</view>
 		</view>
 		<!-- 购物车 -->
-		<view class="carts">
-			<view class="item">
-				<!-- 店铺名称 -->
-				<view class="shopname">优购生活馆</view>
-				<view class="goods" v-for="(item, index) in carts" :key="item.goods_id">
-					<!-- 商品图片 -->
-					<image class="pic" :src="item.goods_small_logo"></image>
-					<!-- 商品信息 -->
-					<view class="meta">
-						<view class="name">{{ item.goods_name }}</view>
-						<view class="price">
-							<text>￥</text>
-							{{ item.goods_price }}
-							<text>.00</text>
+		<template v-if="carts.length">
+			<view class="carts">
+				<view class="item">
+					<!-- 店铺名称 -->
+					<view class="shopname">优购生活馆</view>
+					<view
+						class="goods"
+						v-for="(item, index) in carts"
+						:key="item.goods_id"
+					>
+						<!-- 商品图片 -->
+						<image class="pic" :src="item.goods_small_logo"></image>
+						<!-- 商品信息 -->
+						<view class="meta">
+							<view class="name">{{ item.goods_name }}</view>
+							<view class="price">
+								<text>￥</text>
+								{{ item.goods_price }}
+								<text>.00</text>
+							</view>
+							<!-- 加减 -->
+							<view class="amount">
+								<text class="reduce" @click="setGoodsCount(index, false)">
+									-
+								</text>
+								<input
+									type="number"
+									disabled
+									:value="item.goods_count"
+									class="number"
+								/>
+								<text class="plus" @click="setGoodsCount(index, true)">+</text>
+							</view>
 						</view>
-						<!-- 加减 -->
-						<view class="amount">
-							<text class="reduce">-</text>
-							<input
-								type="number"
-								disabled
-								:value="item.goods_count"
-								class="number"
-							/>
-							<text class="plus">+</text>
+						<!-- 选框 -->
+						<view class="checkbox" @click="toggleState(index)">
+							<icon
+								type="success"
+								size="20"
+								:color="item.goods_state ? '#ea4451' : '#ccc'"
+							></icon>
 						</view>
-					</view>
-					<!-- 选框 -->
-					<view class="checkbox" @click="toggleState(index)">
-						<icon
-							type="success"
-							size="20"
-							:color="item.goods_state ? '#ea4451' : '#ccc'"
-						></icon>
 					</view>
 				</view>
 			</view>
+		</template>
+		<view v-else class="tips">
+			空空如也~
+			<button
+				type="primary"
+				style="width: 400rpx;margin-top: 20rpx;"
+				@click="goToBuygoods"
+			>
+				去买点什么
+			</button>
 		</view>
 		<!-- 其它 -->
 		<view class="extra">
@@ -62,10 +80,10 @@
 			<view class="total">
 				合计:
 				<text>￥</text>
-				<label>14110</label>
+				<label>{{ amount }}</label>
 				<text>.00</text>
 			</view>
-			<view class="pay">结算(3)</view>
+			<view class="pay">结算({{ checkedCount }})</view>
 		</view>
 	</view>
 </template>
@@ -75,7 +93,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
 	computed: {
 		...mapState('cart', ['carts']),
-		...mapGetters('cart', ['allChecked'])
+		...mapGetters('cart', ['allChecked', 'checkedCount', 'amount'])
 	},
 	methods: {
 		toggleState(index) {
@@ -84,6 +102,15 @@ export default {
 		toggleAll() {
 			// 调用 mutations 变更商品选中状态
 			this.$store.commit('cart/toggleAll', this.allChecked)
+		},
+		setGoodsCount(index, type) {
+			if (type) this.$store.commit('cart/increaseCount', index)
+			else this.$store.commit('cart/decreaseCount', index)
+		},
+		goToBuygoods() {
+			uni.navigateTo({
+				url: '../category/index'
+			})
 		}
 	}
 }
