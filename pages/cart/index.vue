@@ -2,13 +2,19 @@
 	<view class="wrapper">
 		<!-- 收货信息 -->
 		<view class="shipment">
-			<view class="dt">收货人:</view>
-			<view class="dd meta">
-				<text class="name">刘德华</text>
-				<text class="phone">13535337057</text>
-			</view>
-			<view class="dt">收货地址:</view>
-			<view class="dd">广东省广州市天河区一珠吉</view>
+			<template v-if="address">
+				<view class="dt">收货人:</view>
+				<view class="dd meta">
+					<text class="name">{{ address.userName }}</text>
+					<text class="phone">{{ address.telNumber }}</text>
+				</view>
+				<view class="dt">收货地址:</view>
+				<view class="dd">
+					{{ address.provinceName }} {{ address.cityName }}
+					{{ address.countyName }} {{ address.detailInfo }}
+				</view>
+			</template>
+			<button v-else type="primary" @click="saveAddress">添加收货地址</button>
 		</view>
 		<!-- 购物车 -->
 		<template v-if="carts.length">
@@ -93,6 +99,7 @@ import { mapState, mapGetters } from 'vuex'
 export default {
 	computed: {
 		...mapState('cart', ['carts']),
+		...mapState('user', ['address']),
 		...mapGetters('cart', ['allChecked', 'checkedCount', 'amount'])
 	},
 	methods: {
@@ -108,9 +115,20 @@ export default {
 			else this.$store.commit('cart/decreaseCount', index)
 		},
 		goToBuygoods() {
-			uni.navigateTo({
-				url: '../category/index'
+			uni.switchTab({
+				url: 'pages/category/index'
 			})
+		},
+		async saveAddress() {
+			const [err, { errMsg, ...address }] = await uni.chooseAddress()
+			// 检测是否获取成历
+			if (err) {
+				return uni.showToast({
+					title: '获取地址失败!',
+					icon: 'none'
+				})
+			}
+			this.$store.commit('user/saveAddress', address)
 		}
 	}
 }
