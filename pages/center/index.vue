@@ -9,6 +9,7 @@
 						userInfo.avatarUrl ||
 							'https://static.botue.com/ugo/uploads/monkey.png'
 					"
+					@click="saveProfile"
 				></image>
 				<text class="nickname">{{ userInfo.nickName || '微信用户' }}</text>
 			</view>
@@ -49,7 +50,7 @@
 			<view class="item icon-arrow" @click="makePhone">联系客服</view>
 			<button class="item icon-arrow" open-type="feedback">意见反馈</button>
 		</view>
-		<button type="primary" @click="saveProfile">获取用户信息</button>
+		<!-- <button type="primary" @click="saveProfile">获取用户信息</button> -->
 	</view>
 </template>
 
