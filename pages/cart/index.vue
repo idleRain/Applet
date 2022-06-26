@@ -129,7 +129,8 @@ export default {
 				})
 			}
 			this.$store.commit('user/saveAddress', address)
-		}
+		},
+		createOrder() {}
 	}
 }
 </script>

@@ -1,13 +1,17 @@
 <script>
+import { mapState } from 'vuex'
 export default {
-	onLaunch: function() {
-		// console.log('App Launch')
+	computed: {
+		...mapState('user', ['token'])
 	},
+	onLaunch: function() {},
+
 	onShow: function() {
-		// console.log('App Show')
+		// 如果 token 不存则去获取
+		if (!this.token) this.$store.dispatch('user/getToken')
 	},
 	onHide: function() {
-		// console.log('App Hide')
+		console.log('App Hide')
 	}
 }
 </script>
